@@ -1,0 +1,1 @@
+{"version":3,"file":"reservation.entity.js","sourceRoot":"","sources":["../../../src/reservation/entities/reservation.entity.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qCAA+D;AAExD,IAAM,WAAW,GAAjB,MAAM,WAAW;CAKvB,CAAA;AALY,kCAAW;AAEpB;IADC,IAAA,gCAAsB,GAAE;;uCACd;AAEX;IADC,IAAA,gBAAM,GAAE;;yCACI;sBAJJ,WAAW;IADvB,IAAA,gBAAM,GAAE;GACI,WAAW,CAKvB"}
