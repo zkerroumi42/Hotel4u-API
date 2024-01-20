@@ -14,35 +14,24 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const Role_1 = require("./interface/Role");
-const faker_1 = require("@faker-js/faker");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const typeorm_1 = require("typeorm");
 const user_entity_1 = require("../users/entities/user.entity");
 const typeorm_2 = require("@nestjs/typeorm");
+const bcrypt_1 = require("bcrypt");
 let AuthService = class AuthService {
     constructor(userRepository) {
         this.userRepository = userRepository;
-        this.users = [
-            {
-                id: faker_1.faker.datatype.uuid(),
-                userName: "zkerroumi42",
-                password: 'zkerroumi',
-                role: Role_1.Role.Admin,
-            },
-            {
-                id: faker_1.faker.datatype.uuid(),
-                userName: "herochoussama",
-                password: 'oussama',
-                role: Role_1.Role.User,
-            }
-        ];
     }
     async authenticate(authenticateDto) {
         const user = await this.userRepository.findOne({
-            where: { "userName": authenticateDto.userName, "password": authenticateDto.password }
+            where: { email: authenticateDto.email }
         });
         if (!user) {
+            throw new common_1.NotFoundException('Invalid credentials');
+        }
+        const isPasswordValid = await (0, bcrypt_1.compare)(authenticateDto.password, user.password);
+        if (!isPasswordValid) {
             throw new common_1.NotFoundException('Invalid credentials');
         }
         const token = (0, jsonwebtoken_1.sign)({ ...user }, 'secrete');

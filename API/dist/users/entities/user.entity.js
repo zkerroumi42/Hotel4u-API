@@ -11,6 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const Role_1 = require("../../auth/interface/Role");
+const Consomation_entity_1 = require("../../consomations/entities/Consomation.entity");
+const hotel_entity_1 = require("../../hotels/entities/hotel.entity");
+const message_entity_1 = require("../../messages/entities/message.entity");
+const notification_entity_1 = require("../../notifications/entities/notification.entity");
+const reservation_entity_1 = require("../../reservations/entities/reservation.entity");
 const typeorm_1 = require("typeorm");
 let User = class User {
 };
@@ -28,25 +33,53 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "prenom", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ default: 'Admin' }),
-    __metadata("design:type", String)
-], User.prototype, "userName", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ default: 'password' }),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ default: 'exemple@email.com' }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ default: '0000' }),
+    __metadata("design:type", String)
+], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true, default: 'User' }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
-], User.prototype, "userUUID", void 0);
+], User.prototype, "phoneNumber", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], User.prototype, "resetToken", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Date)
+], User.prototype, "resetTokenExpires", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => reservation_entity_1.Reservation, (reservation) => reservation.client),
+    __metadata("design:type", Array)
+], User.prototype, "reservations", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => Consomation_entity_1.Consomation, (consomation) => consomation.client),
+    __metadata("design:type", Array)
+], User.prototype, "consomations", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => hotel_entity_1.Hotel, (hotel) => hotel.user),
+    __metadata("design:type", Array)
+], User.prototype, "hotels", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => notification_entity_1.Notification, (notification) => notification.user),
+    __metadata("design:type", Array)
+], User.prototype, "Notifications", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => message_entity_1.Message, (message) => message.expediteur),
+    __metadata("design:type", Array)
+], User.prototype, "messages", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => message_entity_1.Message, (message) => message.destinataire),
+    __metadata("design:type", Array)
+], User.prototype, "messagess", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

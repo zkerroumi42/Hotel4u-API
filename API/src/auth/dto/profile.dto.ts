@@ -9,15 +9,6 @@ export class ProfileDto {
 
     @IsNotEmpty()
     @IsString()
-    readonly userUUID:string;
-
-
-    @IsNotEmpty()
-    @IsString()
-    readonly userName: string;
-
-    @IsNotEmpty()
-    @IsString()
     readonly email: string;
 
     @IsNotEmpty()
@@ -27,6 +18,10 @@ export class ProfileDto {
     @IsNotEmpty()
     @IsString()
     readonly role: Role;
+
+    @IsNotEmpty()
+    @IsString()
+    readonly phoneNumber: string;
 
     
 }

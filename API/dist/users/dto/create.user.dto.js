@@ -18,15 +18,6 @@ class CreateUserDto {
 exports.CreateUserDto = CreateUserDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsInt)(),
-    (0, swagger_1.ApiProperty)({
-        required: false,
-        type: 'number',
-    }),
-    __metadata("design:type", Number)
-], CreateUserDto.prototype, "id", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     (0, swagger_1.ApiProperty)({
         required: true,
@@ -45,22 +36,6 @@ __decorate([
 ], CreateUserDto.prototype, "prenom", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)({
-        required: true,
-        type: 'string',
-    }),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "userName", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)({
-        required: true,
-        type: 'string',
-    }),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "password", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsEmail)(),
     (0, swagger_1.ApiProperty)({
         required: true,
@@ -75,7 +50,7 @@ __decorate([
         type: 'string',
     }),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "role", void 0);
+], CreateUserDto.prototype, "password", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, swagger_1.ApiProperty)({
@@ -83,5 +58,17 @@ __decorate([
         type: 'string',
     }),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "userUUID", void 0);
+], CreateUserDto.prototype, "role", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.Length)(10, 16),
+    (0, class_validator_1.Matches)(/^(\+|00)?212[ \-]?(6|7)([ \-]?\d){8}$/, {
+        message: 'Invalid Moroccan phone number format',
+    }),
+    (0, swagger_1.ApiProperty)({
+        required: true,
+        type: 'string',
+    }),
+    __metadata("design:type", String)
+], CreateUserDto.prototype, "phoneNumber", void 0);
 //# sourceMappingURL=create.user.dto.js.map

@@ -4,10 +4,6 @@ export class AuthenticateDto{
 
     @IsNotEmpty()
     @IsString()
-    readonly userName: string;
-
-    @IsNotEmpty()
-    @IsString()
     readonly email: string;
 
     @IsNotEmpty()

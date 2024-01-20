@@ -1,13 +1,7 @@
-import { IsEmail, IsInt, IsNotEmpty, IsString, Matches } from "class-validator";
+import { IsEmail, IsInt, IsNotEmpty, IsString, Length, Matches } from "class-validator";
 import {ApiProperty} from "@nestjs/swagger";
 import { Role } from "src/auth/interface/Role";
 export class CreateUserDto {
-    @IsNotEmpty()
-    @IsInt()
-    @ApiProperty({
-        required:false,
-        type:'number',
-        })
     readonly id: number;
     @IsNotEmpty()
     @IsString()
@@ -23,20 +17,8 @@ export class CreateUserDto {
         type:'string',
         })
     readonly prenom: string;
-    @IsNotEmpty()
-    @ApiProperty({
-        required:true,
-        type:'string',
-        })
-    readonly userName: string;
-    @IsNotEmpty()
-    // @Length( , )
-    // @Matches()
-    @ApiProperty({
-        required:true,
-        type:'string',
-        })
-    readonly password: string;
+
+
     @IsNotEmpty()
     @IsEmail()
     @ApiProperty({
@@ -44,7 +26,12 @@ export class CreateUserDto {
         type:'string',
         })
     readonly email: string;
-
+    @IsNotEmpty()
+    @ApiProperty({
+        required:true,
+        type:'string',
+        })
+    readonly password: string;
     @IsNotEmpty()
     @ApiProperty({
         required:true,
@@ -53,10 +40,15 @@ export class CreateUserDto {
     readonly role: Role;
 
     @IsNotEmpty()
+    @Length(10,16)
+    @Matches(/^(\+|00)?212[ \-]?(6|7)([ \-]?\d){8}$/, {
+        message: 'Invalid Moroccan phone number format',
+      })
+   //exemple de test : +212-6-12345678
     @ApiProperty({
         required:true,
         type:'string',
         })
-    readonly userUUID: string;
+    readonly phoneNumber: string;
 
 }

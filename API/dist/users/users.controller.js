@@ -14,73 +14,80 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
-const roles_decorator_1 = require("../auth/roles/roles.decorator");
 const users_service_1 = require("./users.service");
-const jwt_guard_1 = require("../auth/jwt.guard");
-const role_guard_1 = require("../auth/role/role.guard");
 const create_user_dto_1 = require("./dto/create.user.dto");
+const notification_service_1 = require("../notifications/notification.service");
+const change_password_dto_1 = require("./dto/change-password.dto");
 let UsersController = class UsersController {
-    constructor(usersService) {
+    constructor(usersService, notificationService) {
         this.usersService = usersService;
+        this.notificationService = notificationService;
     }
     async findAll() {
+        this.notificationService.createnotification(`lists tout users`, "Non read", 1);
         return this.usersService.findAll();
     }
-    signIn(signInDto) {
-        return this.usersService.signIn(signInDto.userName, signInDto.password);
+    async getByid(id) {
+        return await this.usersService.read(id);
     }
-    async register(createUserDto) {
-        return await this.usersService.register(createUserDto);
+    update(id, updateUserDto) {
+        return this.usersService.update(id, updateUserDto);
     }
-    async create(user) {
-        return this.usersService.create(user);
+    delete(id) {
+        return this.usersService.delete(id);
     }
-    profile(req, res) {
-        return res.status(common_1.HttpStatus.OK).json(req.user);
+    async forgetPassword(changePasswordDto) {
+        const user = await this.usersService.findOneByEmail(changePasswordDto.email);
+        if (changePasswordDto.newpassword === changePasswordDto.confirmPassword) {
+            await this.notificationService.createnotification(`${changePasswordDto.email} changé password  avec succes`, "No read yet", user.id);
+            return await this.usersService.changePassword(changePasswordDto.email, changePasswordDto.newpassword);
+        }
+        else {
+            throw new common_1.NotFoundException('Confirmation du mot de passe échouée.');
+        }
     }
 };
 exports.UsersController = UsersController;
 __decorate([
-    (0, common_1.Get)(),
+    (0, common_1.Get)('list'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Post)('login'),
+    (0, common_1.Get)('/profile/read/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getByid", null);
+__decorate([
+    (0, common_1.Patch)('profile/update/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, create_user_dto_1.CreateUserDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "update", null);
+__decorate([
+    (0, common_1.Delete)('/profile/delete/:id'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "delete", null);
+__decorate([
+    (0, common_1.Post)('profile/changePassword'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], UsersController.prototype, "signIn", null);
-__decorate([
-    (0, common_1.Post)('register'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
+    __metadata("design:paramtypes", [change_password_dto_1.ChangePasswordDto]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "register", null);
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "create", null);
-__decorate([
-    (0, roles_decorator_1.Roles)('admin'),
-    (0, common_1.UseGuards)(jwt_guard_1.JwtAuthGuard, role_guard_1.RoleGuard),
-    (0, common_1.Get)('profile'),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", void 0)
-], UsersController.prototype, "profile", null);
+], UsersController.prototype, "forgetPassword", null);
 exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    (0, common_1.Controller)('api/users'),
+    __metadata("design:paramtypes", [users_service_1.UsersService,
+        notification_service_1.NotificationService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

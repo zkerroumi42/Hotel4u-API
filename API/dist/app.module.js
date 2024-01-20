@@ -14,19 +14,25 @@ const passport_1 = require("@nestjs/passport");
 const jwt_1 = require("@nestjs/jwt");
 const jwt_strategy_1 = require("./auth/jwt.strategy");
 const users_module_1 = require("./users/users.module");
-const hotel_module_1 = require("./hotel/hotel.module");
-const ville_module_1 = require("./ville/ville.module");
-const chambre_module_1 = require("./chambre/chambre.module");
-const reservation_module_1 = require("./reservation/reservation.module");
-const consomation_module_1 = require("./consomation/consomation.module");
-const facture_module_1 = require("./facture/facture.module");
+const hotel_module_1 = require("./hotels/hotel.module");
+const ville_module_1 = require("./villes/ville.module");
+const chambre_module_1 = require("./chambres/chambre.module");
+const reservation_module_1 = require("./reservations/reservation.module");
+const consomation_module_1 = require("./consomations/consomation.module");
+const facture_module_1 = require("./factures/facture.module");
+const message_module_1 = require("./messages/message.module");
+const notification_module_1 = require("./notifications/notification.module");
+const payment_module_1 = require("./payment/payment.module");
+const comment_module_1 = require("./comments/comment.module");
+const statistique_module_1 = require("./statistiques/statistique.module");
+const home_module_1 = require("./home/home.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            hotel_module_1.HotelModule, ville_module_1.VilleModule, consomation_module_1.ConsomationModule, reservation_module_1.ReservationModule, facture_module_1.FactureModule, chambre_module_1.ChambreModule,
+            hotel_module_1.HotelModule, ville_module_1.VilleModule, consomation_module_1.ConsomationModule, reservation_module_1.ReservationModule, facture_module_1.FactureModule, chambre_module_1.ChambreModule, message_module_1.MessageModule, notification_module_1.NotificationModule, payment_module_1.PaymentModule, comment_module_1.CommentModule, statistique_module_1.StatistiqueModule, home_module_1.HomeModule,
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'mysql',
                 host: 'localhost',

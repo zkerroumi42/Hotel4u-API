@@ -1,49 +1,67 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from "@nestjs/common";
- 
-import { Roles } from "src/auth/roles/roles.decorator"; 
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post,Delete, Req, Res, UseGuards, NotFoundException } from "@nestjs/common";
 import { User } from "./entities/user.entity";
 import { UsersService } from "./users.service";
-import { JwtAuthGuard } from "src/auth/jwt.guard";
-import { RoleGuard } from "src/auth/role/role.guard";
 import { CreateUserDto } from "./dto/create.user.dto";
+import { NotificationService } from "src/notifications/notification.service";
+import { ForgotPasswordDto } from "./dto/forgot-password.dto";
+import { ChangePasswordDto } from "./dto/change-password.dto";
 
-@Controller('users')
+
+@Controller('api/users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService,
+    private readonly notificationService: NotificationService,
+    // private readonly authService: AuthService,
+    ) {}
+
   
-   @Get()
+  //  @Roles('Admin')
+  //  @UseGuards(JwtAuthGuard, RoleGuard)
+   @Get('list')
    async findAll(): Promise<User[]> {
+    this.notificationService.createnotification(`lists tout users`,"Non read",1);
      return this.usersService.findAll();
    }
 
-
-
-   @Post('login')
-   @HttpCode(HttpStatus.OK)
-   signIn(@Body() signInDto: Record<string, any>) {
-   return this.usersService.signIn(signInDto.userName, signInDto.password);
+   //  @Roles('Admin')
+  //  @UseGuards(JwtAuthGuard, RoleGuard)
+   @Get('/profile/read/:id')
+   async getByid(@Param('id') id: number) {
+   return await this.usersService.read(id);
    }
    
-   @Post('register')
-   @HttpCode(HttpStatus.OK)
-   async register(@Body() createUserDto: CreateUserDto):Promise<User>{
-     return await this.usersService.register(createUserDto);
+
+  //  @Roles('Admin')
+  //  @UseGuards(JwtAuthGuard, RoleGuard)
+   @Patch('profile/update/:id')
+   update(@Param('id') id: number, @Body() updateUserDto: CreateUserDto): Promise<User> {
+     return this.usersService.update(id, updateUserDto);
    }
+
+  //  @Roles('User')
+  //  @UseGuards(JwtAuthGuard, RoleGuard)
+   @Delete('/profile/delete/:id')
+   @HttpCode(HttpStatus.NO_CONTENT)
+   delete(@Param('id') id: number): Promise<User> {
+     return this.usersService.delete(id);
+   }
+
+   @Post('profile/changePassword')
+   @HttpCode(HttpStatus.OK)
+   async forgetPassword(@Body() changePasswordDto: ChangePasswordDto): Promise<void> {
+      const user=await this.usersService.findOneByEmail(changePasswordDto.email);
+      
+     if (changePasswordDto.newpassword === changePasswordDto.confirmPassword) {
+       await this.notificationService.createnotification(`${changePasswordDto.email} changé password  avec succes`,"No read yet",user.id);
+       return await this.usersService.changePassword(changePasswordDto.email, changePasswordDto.newpassword);
+     } else {
+       throw new NotFoundException('Confirmation du mot de passe échouée.');
+     }
+   }
+
  
-  
 
-  @Post()
-  async create(@Body() user): Promise<User> {
-    return this.usersService.create(user);
-  }
-
-
-  @Roles('admin')
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @Get('profile')
-  profile(@Req() req, @Res() res) {
-    return res.status(HttpStatus.OK).json(req.user);
-  }
  
+
 }
 
